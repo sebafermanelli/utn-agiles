@@ -1,0 +1,106 @@
+<div class="max-w-md mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4 text-center">Juego de Ahorcado</h1>
+
+  <div *ngIf="!gameStarted && !gameStatus">
+    <p class="mb-2">Selecciona la dificultad:</p>
+    <div class="relative inline-block w-full mb-4">
+      <select
+        [(ngModel)]="selectedDifficulty"
+        class="appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
+      >
+        <option *ngFor="let option of difficultyOptions" [value]="option">
+          {{ option | titlecase }}
+        </option>
+      </select>
+      <div
+        class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+      >
+        <svg
+          class="fill-current h-4 w-4"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div class="text-center">
+      <button
+        (click)="startNewGame()"
+        class="bg-purple-500 text-white px-4 py-2 rounded"
+      >
+        Iniciar Juego
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="gameStarted">
+    <div *ngIf="!gameStatus?.isFinished">
+      <p class="text-lg">
+        Palabra:
+        <span *ngFor="let letter of wordArray">
+          {{ gameStatus?.guessedLetters?.includes(letter) ? letter : "_" }}
+        </span>
+      </p>
+      <p class="text-lg">
+        Intentos: {{ gameStatus?.attempts || 0 }}/{{
+          gameStatus?.maxAttempts || 0
+        }}
+      </p>
+
+      <div class="mt-4">
+        <input
+          [(ngModel)]="letterGuess"
+          (keyup)="onLetterKeyUp($event)"
+          placeholder="Adivina una letra"
+          class="p-2 border rounded"
+        />
+        <button
+          (click)="guessLetter()"
+          [disabled]="!isValidLetterGuess"
+          class="bg-blue-500 text-white px-4 py-2 ml-2 rounded"
+          [ngClass]="{ 'opacity-50 cursor-not-allowed': !isValidLetterGuess }"
+        >
+          Adivinar Letra
+        </button>
+      </div>
+
+      <div class="mt-4">
+        <input
+          [(ngModel)]="wordGuess"
+          (keyup)="onWordKeyUp($event)"
+          placeholder="Adivina la palabra"
+          class="p-2 border rounded"
+        />
+        <button
+          (click)="guessWord()"
+          [disabled]="!isValidWordGuess"
+          class="bg-green-500 text-white px-4 py-2 ml-2 rounded"
+          [ngClass]="{ 'opacity-50 cursor-not-allowed': !isValidWordGuess }"
+        >
+          Adivinar Palabra
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="gameStatus?.isFinished">
+      <p
+        class="text-lg font-bold"
+        [ngClass]="{
+          'text-green-500': gameStatus?.hasWon,
+          'text-red-500': !gameStatus?.hasWon
+        }"
+      >
+        {{ gameStatus?.hasWon ? "¡Has Ganado!" : "Has Perdido" }}
+      </p>
+      <button
+        (click)="gameStarted = false; gameStatus = null"
+        class="bg-purple-500 text-white px-4 py-2 mt-4 rounded"
+      >
+        Empezar Nuevo Juego
+      </button>
+    </div>
+  </div>
+</div>
