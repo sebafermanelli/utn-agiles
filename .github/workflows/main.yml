@@ -76,9 +76,9 @@ jobs:
 
       - name: Deploy to Vercel
         env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: prj_adS4QIR64HhrD0A4iPkEJS67T87E
+          VERCEL_ORG_ID: t9WsULBf9bq9O2OXrzGU3Ikf
+          VERCEL_TOKEN: JEHckXEXXNtXHW4ikEXHNB2z
         run: |
           cd hangman-frontend
           npx vercel --prod --confirm
