@@ -59,3 +59,5 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 hangman-backend/node_modules
 hangman-frontend/node_modules
 hangman-backend/dist
+hangman-frontend/.angular
+.vercel
