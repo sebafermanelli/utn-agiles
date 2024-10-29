@@ -1,4 +1,8 @@
 name: CI/CD for Hangman Project
+env:
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
 on:
   push:
@@ -69,19 +73,13 @@ jobs:
     name: Deploy to Vercel
     needs: [frontend, backend]
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Deploy to Vercel
-        env:
-          VERCEL_PROJECT_ID: prj_adS4QIR64HhrD0A4iPkEJS67T87E
-          VERCEL_ORG_ID: t9WsULBf9bq9O2OXrzGU3Ikf
-          VERCEL_TOKEN: 1IvaHau7NxPsbARMvArK6nti
-        run: |
-          vercel login 1IvaHau7NxPsbARMvArK6nti
-          cd hangman-frontend
-          npx vercel --prod --yes
-          cd ../hangman-backend
-          npx vercel --prod --yes
+      - uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
