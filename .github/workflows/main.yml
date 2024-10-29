@@ -78,8 +78,9 @@ jobs:
         env:
           VERCEL_PROJECT_ID: prj_adS4QIR64HhrD0A4iPkEJS67T87E
           VERCEL_ORG_ID: t9WsULBf9bq9O2OXrzGU3Ikf
-          VERCEL_TOKEN: Zd5Qg2IYNd4GJAN79DmwQIh8
+          VERCEL_TOKEN: AZjOFeLhAehiQWufsuxoh935
         run: |
+          vercel login --token AZjOFeLhAehiQWufsuxoh935
           cd hangman-frontend
           npx vercel --prod --yes
           cd ../hangman-backend
