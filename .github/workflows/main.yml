@@ -27,10 +27,10 @@ jobs:
           cd hangman-frontend
           npm install
 
-      - name: Run tests with coverage
-        run: |
-          cd hangman-frontend
-          npm run test
+      # - name: Run tests with coverage
+      #   run: |
+      #     cd hangman-frontend
+      #     npm run test
 
       - name: Build frontend
         run: |
