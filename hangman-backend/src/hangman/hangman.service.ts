@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { Hangman } from './entities/hangman.entity';
-import { randomUUID } from 'crypto';
+import { Injectable } from "@nestjs/common";
+import { Hangman } from "./entities/hangman.entity";
+import { randomUUID } from "crypto";
 
 @Injectable()
 export class HangmanService {
   private games = new Map<string, Hangman>();
   private words = {
-    easy: ['gato', 'perro', 'pajaro', 'leon', 'tigre'],
-    medium: ['cocodrilo', 'elefante', 'jirafa', 'hipopotamo', 'rinoceronte'],
-    hard: ['ornitorrinco', 'murcielago', 'iguana', 'tarantula', 'escarabajo'],
+    easy: ["gato", "perro", "pajaro", "leon", "tigre"],
+    medium: ["cocodrilo", "elefante", "jirafa", "hipopotamo", "rinoceronte"],
+    hard: ["ornitorrinco", "murcielago", "iguana", "tarantula", "escarabajo"],
   };
 
-  createGame(difficulty: 'easy' | 'medium' | 'hard'): Hangman {
+  createGame(difficulty: "easy" | "medium" | "hard"): Hangman {
     const word = this.getRandomWord(difficulty);
     const id = randomUUID();
 
@@ -29,7 +29,7 @@ export class HangmanService {
     return game;
   }
 
-  getRandomWord(difficulty: 'easy' | 'medium' | 'hard'): string {
+  getRandomWord(difficulty: "easy" | "medium" | "hard"): string {
     const words = this.words[difficulty];
     return words[Math.floor(Math.random() * words.length)];
   }
@@ -37,7 +37,7 @@ export class HangmanService {
   guessLetter(id: string, letter: string): Hangman {
     const game = this.games.get(id);
     if (!game || game.isFinished) {
-      throw new Error('Juego no encontrado o ya finalizado');
+      throw new Error("Juego no encontrado o ya finalizado");
     }
 
     if (!game.word.includes(letter)) {
@@ -61,7 +61,7 @@ export class HangmanService {
   guessWord(id: string, word: string): Hangman {
     const game = this.games.get(id);
     if (!game || game.isFinished) {
-      throw new Error('Juego no encontrado o ya finalizado');
+      throw new Error("Juego no encontrado o ya finalizado");
     }
 
     if (game.word !== word) {
@@ -82,14 +82,14 @@ export class HangmanService {
   findGame(id: string): Hangman {
     const game = this.games.get(id);
     if (!game) {
-      throw new Error('Juego no encontrado');
+      throw new Error("Juego no encontrado");
     }
     return game;
   }
 
   private isGameWon(game: Hangman): boolean {
     return game.word
-      .split('')
+      .split("")
       .every((letter) => game.guessedLetters.includes(letter));
   }
 }

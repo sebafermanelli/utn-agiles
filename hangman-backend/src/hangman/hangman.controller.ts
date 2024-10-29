@@ -7,18 +7,18 @@ import {
   Param,
   Delete,
   BadRequestException,
-} from '@nestjs/common';
-import { HangmanService } from './hangman.service';
+} from "@nestjs/common";
+import { HangmanService } from "./hangman.service";
 
-@Controller('hangman')
+@Controller("hangman")
 export class HangmanController {
   constructor(private readonly hangmanService: HangmanService) {}
 
-  @Post('new')
-  createGame(@Body('difficulty') difficulty: 'easy' | 'medium' | 'hard') {
+  @Post("new")
+  createGame(@Body("difficulty") difficulty: "easy" | "medium" | "hard") {
     try {
-      if (!['easy', 'medium', 'hard'].includes(difficulty)) {
-        throw new BadRequestException('Dificultad invalida');
+      if (!["easy", "medium", "hard"].includes(difficulty)) {
+        throw new BadRequestException("Dificultad invalida");
       }
       return this.hangmanService.createGame(difficulty);
     } catch (error) {
@@ -26,11 +26,11 @@ export class HangmanController {
     }
   }
 
-  @Patch('guess-letter/:id')
-  guessLetter(@Param('id') id: string, @Body('letter') letter: string) {
+  @Patch("guess-letter/:id")
+  guessLetter(@Param("id") id: string, @Body("letter") letter: string) {
     try {
       if (letter.length !== 1) {
-        throw new BadRequestException('Debe ingresar una sola letra');
+        throw new BadRequestException("Debe ingresar una sola letra");
       }
       return this.hangmanService.guessLetter(id, letter);
     } catch (error) {
@@ -38,11 +38,11 @@ export class HangmanController {
     }
   }
 
-  @Patch('guess-word/:id')
-  guessWord(@Param('id') id: string, @Body('word') word: string) {
+  @Patch("guess-word/:id")
+  guessWord(@Param("id") id: string, @Body("word") word: string) {
     try {
       if (word.length < 1) {
-        throw new BadRequestException('Debe ingresar una palabra');
+        throw new BadRequestException("Debe ingresar una palabra");
       }
       return this.hangmanService.guessWord(id, word);
     } catch (error) {
@@ -50,8 +50,8 @@ export class HangmanController {
     }
   }
 
-  @Get(':id')
-  getGame(@Param('id') id: string) {
+  @Get(":id")
+  getGame(@Param("id") id: string) {
     try {
       return this.hangmanService.findGame(id);
     } catch (error) {
