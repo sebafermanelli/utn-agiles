@@ -36,18 +36,15 @@
     </div>
   </div>
 
-  <div *ngIf="gameStarted">
-    <div *ngIf="!gameStatus?.isFinished">
+  <div *ngIf="gameStarted && gameStatus">
+    <div *ngIf="!gameStatus.isFinished">
       <p class="text-lg">
         Palabra:
-        <span *ngFor="let letter of wordArray">
-          {{ gameStatus?.guessedLetters?.includes(letter) ? letter : "_" }}
-        </span>
+
+        {{ gameStatus.guessedWord.split("").join(" ") }}
       </p>
       <p class="text-lg">
-        Intentos: {{ gameStatus?.attempts || 0 }}/{{
-          gameStatus?.maxAttempts || 0
-        }}
+        Intentos: {{ gameStatus.attempts }}/{{ gameStatus.maxAttempts }}
       </p>
 
       <div class="mt-4">
@@ -89,11 +86,11 @@
       <p
         class="text-lg font-bold"
         [ngClass]="{
-          'text-green-500': gameStatus?.hasWon,
-          'text-red-500': !gameStatus?.hasWon
+          'text-green-500': gameStatus.hasWon,
+          'text-red-500': !gameStatus.hasWon
         }"
       >
-        {{ gameStatus?.hasWon ? "¡Has Ganado!" : "Has Perdido" }}
+        {{ gameStatus.hasWon ? "¡Has Ganado!" : "Has Perdido" }}
       </p>
       <button
         (click)="gameStarted = false; gameStatus = null"

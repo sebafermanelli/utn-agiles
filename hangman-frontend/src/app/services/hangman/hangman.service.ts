@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
 export interface Hangman {
   id: string;
   word: string;
+  guessedWord: string;
   guessedLetters: string[];
   attempts: number;
   maxAttempts: number;
@@ -13,10 +14,11 @@ export interface Hangman {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class HangmanService {
-  private apiUrl = 'http://localhost:3000/hangman';
+  private apiUrl = "https://utn-agiles-tp-20n6.onrender.com/hangman";
+  // private apiUrl = "http://localhost:3000/hangman";
 
   constructor(private http: HttpClient) {}
 
