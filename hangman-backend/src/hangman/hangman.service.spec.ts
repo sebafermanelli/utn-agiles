@@ -1,7 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { HangmanService } from "./hangman.service";
 import { Hangman } from "./entities/hangman.entity";
-import e from "express";
 
 describe("HangmanService", () => {
   let service: HangmanService;

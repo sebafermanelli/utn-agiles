@@ -37,7 +37,7 @@ describe("HangmanController", () => {
     findGame: jest.fn((id: string) => ({
       id,
       word: "gato",
-      guessedLetters: [],
+      guessedLetters: [] as string[],
       attempts: 0,
       maxAttempts: 6,
       isFinished: false,

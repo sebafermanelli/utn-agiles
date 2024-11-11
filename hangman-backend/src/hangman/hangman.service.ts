@@ -11,13 +11,17 @@ export class HangmanService {
     hard: ["ornitorrinco", "murcielago", "iguana", "tarantula", "escarabajo"],
   };
 
-  createGame(difficulty: "easy" | "medium" | "hard"): Hangman {
-    const word = this.getRandomWord(difficulty);
+  createGame(
+    difficulty: "easy" | "medium" | "hard",
+    providedWord?: string
+  ): Hangman {
+    const word = providedWord ? providedWord : this.getRandomWord(difficulty);
     const id = randomUUID();
 
     const game: Hangman = {
       id,
       word,
+      guessedWord: "_".repeat(word.length),
       guessedLetters: [],
       attempts: 0,
       maxAttempts: 6,
@@ -48,6 +52,10 @@ export class HangmanService {
       }
     } else {
       game.guessedLetters.push(letter);
+      game.guessedWord = game.word
+        .split("")
+        .map((char) => (game.guessedLetters.includes(char) ? char : "_"))
+        .join("");
       if (this.isGameWon(game)) {
         game.isFinished = true;
         game.hasWon = true;
