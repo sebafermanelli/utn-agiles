@@ -1,0 +1,20 @@
+{
+  "name": "hangman-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "hangman-frontend",
+    "hangman-backend"
+  ],
+  "scripts": {
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "cd hangman-frontend && npm run start",
+    "start:backend": "cd hangman-backend && npm run start",
+    "build": "concurrently \"npm run build:frontend\" \"npm run build:backend\"",
+    "build:frontend": "cd hangman-frontend && npm run build",
+    "build:backend": "cd hangman-backend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
