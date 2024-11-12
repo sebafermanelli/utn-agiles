@@ -1,8 +1,4 @@
 name: CI/CD for Hangman Project
-env:
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
 on:
   push:
@@ -13,10 +9,34 @@ on:
       - main
 
 jobs:
-  test:
-    name: Tests and Coverage
+  unit-tests-and-coverage:
+    name: Unit Tests & Coverage
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
 
+      - name: Install Dependencies
+        run: |
+          npm install
+          cd hangman-backend && npm install
+
+      - name: Run Backend Tests
+        run: npm run test:backend
+
+      - name: Upload Backend Coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: hangman-backend/coverage
+
+  e2e-tests:
+    name: E2E Acceptance Tests
+    needs: [unit-tests-and-coverage]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,56 +49,17 @@ jobs:
           npm install
           npm install -g @angular/cli
           npm install -g wait-on
-
-      - name: Install Frontend Dependencies
-        run: |
-          cd hangman-frontend
-          npm install
-          npm install @rollup/rollup-linux-x64-gnu
-
-      - name: Install Backend Dependencies
-        run: cd hangman-backend && npm install
-
-      - name: Run Unit Tests
-        run: npm run test
+          cd hangman-frontend && npm install
+          cd ../hangman-backend && npm install
 
       - name: Start Applications and Run E2E Tests
         run: |
+          # Iniciar backend
+          cd hangman-backend && npm run start
 
-          npm run start &
-          wait-on http://localhost:4200 -t 10000
+          # Iniciar frontend
+          cd ../hangman-frontend && npm run start &
+          wait-on http://localhost:4200 -t 60000
 
-          npm run test:e2e
-
-      - name: Upload Frontend Coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-coverage
-          path: hangman-frontend/coverage
-
-      - name: Upload Backend Coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-coverage
-          path: hangman-backend/coverage
-
-  deploy:
-    name: Deploy to Vercel
-    needs: [test]
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+          # Ejecutar tests e2e
+          cd .. && npm run test:e2e
