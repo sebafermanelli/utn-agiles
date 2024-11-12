@@ -44,8 +44,7 @@ jobs:
       - name: Start Applications
         run: |
           cd hangman-frontend && npm run start &
-          cd hangman-backend && npm run start &
-          npx wait-on http://localhost:4200 http://localhost:3000
+          cd hangman-backend && npm run start
 
       - name: Run E2E Tests
         run: npm run test:e2e
