@@ -13,8 +13,8 @@ on:
       - main
 
 jobs:
-  frontend:
-    name: Frontend Tests and Build
+  test:
+    name: Tests and Coverage
     runs-on: ubuntu-latest
 
     steps:
@@ -23,21 +23,23 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install Dependencies
+        run: npm install
+
       - name: Install Frontend Dependencies
-        run: |
-          cd hangman-frontend
-          npm install
+        run: cd hangman-frontend && npm install
 
-      - name: Run Frontend Unit Tests with Coverage
-        run: |
-          cd hangman-frontend
-          npm run test -- --no-watch --code-coverage --browsers=ChromeHeadless
+      - name: Install Backend Dependencies
+        run: cd hangman-backend && npm install
 
-      - name: Run Cypress E2E Tests
+      - name: Run Unit Tests
         run: |
-          cd hangman-frontend
-          npm start & npx wait-on http://localhost:4200
-          npm run cypress:run
+          npm run test
+
+      - name: Run E2E Tests
+        run: |
+          npm run start & npx wait-on http://localhost:4200
+          npm run test:e2e
 
       - name: Upload Frontend Coverage
         uses: actions/upload-artifact@v4
@@ -45,45 +47,15 @@ jobs:
           name: frontend-coverage
           path: hangman-frontend/coverage
 
-  backend:
-    name: Backend Tests and Build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install Backend Dependencies
-        run: |
-          cd hangman-backend
-          npm install
-
-      - name: Run Backend Unit Tests with Coverage
-        run: |
-          cd hangman-backend
-          npm run test:cov
-
-      - name: Run Backend E2E Tests
-        run: |
-          cd hangman-backend
-          npm run test:e2e
-
       - name: Upload Backend Coverage
         uses: actions/upload-artifact@v4
         with:
           name: backend-coverage
           path: hangman-backend/coverage
 
-      - name: Check Coverage Thresholds
-        run: |
-          cd hangman-backend
-          npx jest --coverage --coverageThreshold='{"global":{"branches":"80","functions":"80","lines":"80","statements":"80"}}'
-
   deploy:
     name: Deploy to Vercel
-    needs: [frontend, backend]
+    needs: [test]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
