@@ -59,7 +59,7 @@ jobs:
 
           # Iniciar frontend
           cd ../hangman-frontend && npm run start &
-          wait-on http://localhost:4200 -t 60000
+          wait-on http://localhost:4200 -t 5000
 
           # Ejecutar tests e2e
           cd .. && npm run test:e2e
