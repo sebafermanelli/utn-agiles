@@ -18,68 +18,86 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: "20"
 
-      - name: Install dependencies
+      - name: Install Frontend Dependencies
         run: |
           cd hangman-frontend
           npm install
 
-      # - name: Run tests with coverage
-      #   run: |
-      #     cd hangman-frontend
-      #     npm run test
-
-      - name: Build frontend
+      - name: Run Frontend Unit Tests with Coverage
         run: |
           cd hangman-frontend
-          npm run build
+          npm run test -- --no-watch --code-coverage --browsers=ChromeHeadless
+
+      - name: Run Cypress E2E Tests
+        run: |
+          cd hangman-frontend
+          npm start & npx wait-on http://localhost:4200
+          npm run cypress:run
+
+      - name: Upload Frontend Coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend-coverage
+          path: hangman-frontend/coverage
 
   backend:
     name: Backend Tests and Build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: "20"
 
-      - name: Install dependencies
+      - name: Install Backend Dependencies
         run: |
           cd hangman-backend
           npm install
 
-      - name: Run tests with coverage
+      - name: Run Backend Unit Tests with Coverage
         run: |
           cd hangman-backend
-          npm run test
+          npm run test:cov
 
-      - name: Build backend
+      - name: Run Backend E2E Tests
         run: |
           cd hangman-backend
-          npm run build
+          npm run test:e2e
+
+      - name: Upload Backend Coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-coverage
+          path: hangman-backend/coverage
+
+      - name: Check Coverage Thresholds
+        run: |
+          cd hangman-backend
+          npx jest --coverage --coverageThreshold='{"global":{"branches":"80","functions":"80","lines":"80","statements":"80"}}'
 
   deploy:
     name: Deploy to Vercel
     needs: [frontend, backend]
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
+
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

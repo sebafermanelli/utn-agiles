@@ -12,7 +12,14 @@
     "start:backend": "cd hangman-backend && npm run start",
     "build": "concurrently \"npm run build:frontend\" \"npm run build:backend\"",
     "build:frontend": "cd hangman-frontend && npm run build",
-    "build:backend": "cd hangman-backend && npm run build"
+    "build:backend": "cd hangman-backend && npm run build",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "cd hangman-frontend && npm run cypress:open",
+    "test:backend": "cd hangman-backend && npm run test:cov",
+    "test:e2e": "concurrently \"npm run test:e2e:frontend\" \"npm run test:e2e:backend\"",
+    "test:e2e:frontend": "cd hangman-frontend && npm run cypress:run",
+    "test:e2e:backend": "cd hangman-backend && npm run test:e2e",
+    "test:all": "npm run test && npm run test:e2e"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

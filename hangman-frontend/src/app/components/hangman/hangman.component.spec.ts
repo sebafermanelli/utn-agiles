@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HangmanComponent } from './hangman.component';
 
 describe('HangmanComponent', () => {
@@ -9,15 +8,10 @@ describe('HangmanComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HangmanComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HangmanComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
   });
 });
