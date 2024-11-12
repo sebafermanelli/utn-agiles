@@ -22,12 +22,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install Dependencies
         run: |
           npm install
           npm install -g @angular/cli
+          npm install -g wait-on
 
       - name: Install Frontend Dependencies
         run: |
@@ -41,13 +42,15 @@ jobs:
       - name: Run Unit Tests
         run: npm run test
 
-      - name: Start Applications
+      - name: Start Applications and Run E2E Tests
         run: |
-          cd hangman-frontend && npm run start &
-          cd hangman-backend && npm run start
+          cd hangman-backend && npm run start &
+          wait-on http://localhost:3000 -t 60000
 
-      - name: Run E2E Tests
-        run: npm run test:e2e
+          cd ../hangman-frontend && npm run start &
+          wait-on http://localhost:4200 -t 60000
+
+          cd .. && npm run test:e2e
 
       - name: Upload Frontend Coverage
         uses: actions/upload-artifact@v4
