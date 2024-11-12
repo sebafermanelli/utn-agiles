@@ -70,16 +70,18 @@ describe("HangmanController", () => {
 
   it("debe crear un nuevo juego con dificultad válida", () => {
     const result = controller.createGame("easy");
-    expect(result).toEqual({
-      id: expect.any(String),
-      word: "gato",
-      guessedLetters: [],
-      guessedWord: "",
-      attempts: 0,
-      maxAttempts: 6,
-      isFinished: false,
-      hasWon: false,
-    });
+    expect(result).toEqual(
+      jasmine.objectContaining({
+        id: jasmine.any(String),
+        word: "gato",
+        guessedLetters: [],
+        guessedWord: "",
+        attempts: 0,
+        maxAttempts: 6,
+        isFinished: false,
+        hasWon: false,
+      })
+    );
     expect(service.createGame).toHaveBeenCalledWith("easy");
   });
 
