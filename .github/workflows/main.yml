@@ -53,4 +53,10 @@ jobs:
 
       - name: Run E2E Tests
         run: |
-          npm run test:e2e
+          npm run start:backend & 
+          sleep 10
+          
+          cd hangman-frontend && ng serve & 
+          sleep 30
+          
+          npm run cypress:run
