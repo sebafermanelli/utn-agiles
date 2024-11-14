@@ -16,7 +16,7 @@
     "test": "npm run test:backend",
     "test:frontend": "cd hangman-frontend && npm run cypress:open",
     "test:backend": "cd hangman-backend && npm run test:cov",
-    "test:e2e": "concurrently \"npm run test:e2e:frontend\"",
+    "test:e2e": "concurrently \"npm run start:backend\" \"npm run start:frontend\" \"npm run test:e2e:frontend\"",
     "test:e2e:frontend": "cd hangman-frontend && npm run cypress:run",
     "test:all": "npm run test && npm run test:e2e"
   },

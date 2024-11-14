@@ -52,12 +52,6 @@ jobs:
           cd hangman-frontend && npm install
           cd ../hangman-backend && npm install
 
-      - name: Start Applications and Run E2E Tests
+      - name: Run E2E Tests
         run: |
-          cd hangman-backend && npm run start
-          wait-on http://localhost:3000 -t 5000
-
-          cd ../hangman-frontend && npm run start &
-          wait-on http://localhost:4200 -t 5000
-
-          cd .. && npm run test:e2e
+          npm run test:e2e
