@@ -48,15 +48,22 @@ jobs:
         run: |
           npm install
           npm install -g @angular/cli
-          cd hangman-frontend && rm -rf node_modules package-lock.json && npm install
+          cd hangman-frontend
+          rm -rf node_modules package-lock.json
+          npm install --legacy-peer-deps
+          npm install -D cypress
           cd ../hangman-backend && npm install
 
       - name: Run E2E Tests
         run: |
+          # Start backend
           npm run start:backend & 
           sleep 10
           
-          cd hangman-frontend && ng serve & 
-          sleep 30
+          # Start frontend
+          cd hangman-frontend
+          NODE_OPTIONS=--openssl-legacy-provider ng serve & 
+          sleep 45
           
-          npm run cypress:run
+          # Run Cypress (usando la ruta correcta)
+          cd hangman-frontend && npx cypress run
