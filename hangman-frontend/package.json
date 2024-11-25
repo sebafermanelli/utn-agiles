@@ -35,7 +35,7 @@
     "@cypress/schematic": "^2.5.2",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.20",
-    "cypress": "^13.15.2",
+    "cypress": "^13.16.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
