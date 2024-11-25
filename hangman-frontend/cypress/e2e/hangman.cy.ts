@@ -89,12 +89,8 @@ describe("Hangman Game", () => {
     cy.get('input[placeholder="Adivina la palabra"]').clear().type("cualquier");
 
     cy.contains("button", "Adivinar Palabra").should("not.be.disabled").click();
-    // Verificar que el juego responde (ya sea con victoria o derrota)
-    cy.get("body").should("satisfy", ($body: JQuery<HTMLElement>) => {
-      return (
-        $body.text().includes("¡Has Ganado!") ||
-        $body.text().includes("Intentos:")
-      );
-    });
+
+    // Verify attempt was registered
+    cy.contains("Intentos:").should("exist");
   });
 });
