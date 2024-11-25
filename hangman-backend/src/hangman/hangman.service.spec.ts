@@ -54,38 +54,69 @@ describe("HangmanService", () => {
     ]).toContain(word);
   });
 
-  it("debe manejar una adivinanza de letra correcta", () => {
+  it("debe manejar una adivinanza de letra correcta (guessedLetters)", () => {
+    const game = service.createGame("easy");
+    const word = game.word;
+    const letter = word.charAt(0); // Usa la primera letra de la palabra
+    const updatedGame = service.guessLetter(game.id, letter);
+    expect(updatedGame.guessedLetters).toContain(letter);
+    expect(updatedGame.attempts).toBe(0); // No debe aumentar intentos si es correcta
+  });
+
+  it("debe manejar una adivinanza de letra correcta (guessedWord)", () => {
     const game = service.createGame("easy");
     const word = game.word;
     const letter = word.charAt(0); // Usa la primera letra de la palabra
     const updatedGame = service.guessLetter(game.id, letter);
     expect(updatedGame.guessedWord).toContain(letter);
-    expect(updatedGame.guessedLetters).toContain(letter);
     expect(updatedGame.attempts).toBe(0); // No debe aumentar intentos si es correcta
   });
 
-  it("debe manejar una adivinanza de letra incorrecta", () => {
+  it("debe manejar una adivinanza de letra incorrecta (guessedLetters)", () => {
     const game = service.createGame("easy");
     const updatedGame = service.guessLetter(game.id, "z"); // Suponemos que 'z' no está en la palabra
     expect(updatedGame.guessedLetters).not.toContain("z");
     expect(updatedGame.attempts).toBe(1); // Debe aumentar intentos
   });
 
-  it("debe manejar una adivinanza de palabra correcta", () => {
+  it("debe manejar una adivinanza de letra incorrecta (guessedWord)", () => {
+    const game = service.createGame("easy");
+    const updatedGame = service.guessLetter(game.id, "z"); // Suponemos que 'z' no está en la palabra
+    expect(updatedGame.guessedWord).not.toContain("z");
+    expect(updatedGame.attempts).toBe(1); // Debe aumentar intentos
+  });
+
+  it("debe manejar una adivinanza de palabra correcta (guessedLetters)", () => {
     const game = service.createGame("easy");
     const updatedGame = service.guessWord(game.id, game.word); // Adivina la palabra correcta
+    expect(updatedGame.guessedLetters).toEqual(game.word.split(""));
     expect(updatedGame.attempts).toBe(0); // No debe aumentar intentos
   });
 
-  it("debe manejar una adivinanza de palabra incorrecta", () => {
+  it("debe manejar una adivinanza de palabra correcta (guessedWord)", () => {
+    const game = service.createGame("easy");
+    const updatedGame = service.guessWord(game.id, game.word); // Adivina la palabra correcta
+    expect(updatedGame.guessedWord).toBe(game.word);
+    expect(updatedGame.attempts).toBe(0); // No debe aumentar intentos
+  });
+
+  it("debe manejar una adivinanza de palabra incorrecta (guessedLetters)", () => {
     const game = service.createGame("easy");
     const updatedGame = service.guessWord(game.id, "incorrecta");
+    expect(updatedGame.guessedLetters).not.toEqual(game.word.split(""));
+    expect(updatedGame.attempts).toBe(1); // Debe aumentar intentos
+  });
+
+  it("debe manejar una adivinanza de palabra incorrecta (guessedWord)", () => {
+    const game = service.createGame("easy");
+    const updatedGame = service.guessWord(game.id, "incorrecta");
+    expect(updatedGame.guessedWord).not.toBe(game.word);
     expect(updatedGame.attempts).toBe(1); // Debe aumentar intentos
   });
 
   it("debe lanzar un error si el juego no se encuentra al adivinar una letra", () => {
     expect(() => service.guessLetter("invalido", "a")).toThrow(
-      "Juego no encontrado o ya finalizadoa"
+      "Juego no encontrado o ya finalizado"
     );
   });
 

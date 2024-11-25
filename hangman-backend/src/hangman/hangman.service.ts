@@ -81,6 +81,8 @@ export class HangmanService {
     } else {
       game.isFinished = true;
       game.hasWon = true;
+      game.guessedWord = word;
+      game.guessedLetters = word.split("");
       this.games.delete(id);
     }
 
