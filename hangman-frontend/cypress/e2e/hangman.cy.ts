@@ -1,6 +1,6 @@
 describe("Hangman Game", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:4200/game");
+    cy.visit("https://utn-agiles-tp.vercel.app/game");
   });
 
   it("should start a new game with selected difficulty", () => {
