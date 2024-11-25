@@ -21,6 +21,7 @@ describe("HangmanService", () => {
     const game: Hangman = service.createGame("easy");
     expect(game).toBeDefined();
     expect(game.word).toBeDefined();
+    expect(game.guessedWord).toBeDefined();
     expect(game.guessedLetters.length).toBe(0);
     expect(game.attempts).toBe(0);
     expect(game.maxAttempts).toBe(6);
@@ -58,6 +59,7 @@ describe("HangmanService", () => {
     const word = game.word;
     const letter = word.charAt(0); // Usa la primera letra de la palabra
     const updatedGame = service.guessLetter(game.id, letter);
+    expect(updatedGame.guessedWord).toContain(letter);
     expect(updatedGame.guessedLetters).toContain(letter);
     expect(updatedGame.attempts).toBe(0); // No debe aumentar intentos si es correcta
   });
@@ -83,7 +85,7 @@ describe("HangmanService", () => {
 
   it("debe lanzar un error si el juego no se encuentra al adivinar una letra", () => {
     expect(() => service.guessLetter("invalido", "a")).toThrow(
-      "Juego no encontrado o ya finalizado"
+      "Juego no encontrado o ya finalizadoa"
     );
   });
 
