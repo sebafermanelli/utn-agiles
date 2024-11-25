@@ -2,7 +2,7 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:4200",
+    baseUrl: "https://utn-agiles-tp.vercel.app/",
     video: false,
     screenshotOnRunFailure: false,
     supportFile: false,
